@@ -14,3 +14,6 @@ local opts =
 --
 require("lazy").setup("plugins")
 require("options")
+
+-- Load LSP configuration using new vim.lsp.config (Neovim 0.11+)
+require("lsp_config")
