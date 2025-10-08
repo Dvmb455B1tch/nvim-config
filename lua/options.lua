@@ -11,6 +11,24 @@ vim.cmd [[
   hi EndOfBuffer guibg=NONE ctermbg=NONE
   hi LineNr guibg=NONE ctermbg=NONE
   hi SignColumn guibg=NONE ctermbg=NONE
+  
+  " Enhanced LSP diagnostic highlighting
+  hi DiagnosticError guifg=#f38ba8 gui=bold
+  hi DiagnosticWarn guifg=#f9e2af gui=bold
+  hi DiagnosticInfo guifg=#89b4fa gui=bold
+  hi DiagnosticHint guifg=#94e2d5 gui=bold
+  
+  " Virtual text styling
+  hi DiagnosticVirtualTextError guifg=#f38ba8 guibg=NONE gui=italic
+  hi DiagnosticVirtualTextWarn guifg=#f9e2af guibg=NONE gui=italic
+  hi DiagnosticVirtualTextInfo guifg=#89b4fa guibg=NONE gui=italic
+  hi DiagnosticVirtualTextHint guifg=#94e2d5 guibg=NONE gui=italic
+  
+  " Underline diagnostics
+  hi DiagnosticUnderlineError gui=undercurl guisp=#f38ba8
+  hi DiagnosticUnderlineWarn gui=undercurl guisp=#f9e2af
+  hi DiagnosticUnderlineInfo gui=undercurl guisp=#89b4fa
+  hi DiagnosticUnderlineHint gui=undercurl guisp=#94e2d5
 ]]
 
 -- Terminal settings

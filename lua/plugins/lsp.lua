@@ -11,6 +11,71 @@ return {
     config = function()
       local lspconfig = require("lspconfig")
       
+      -- Configure enhanced diagnostics display
+      vim.diagnostic.config({
+        -- Show diagnostics in virtual text (inline with code)
+        virtual_text = {
+          enabled = true,
+          source = "if_many", -- Show source if multiple sources exist
+          prefix = "● ", -- Could be '■', '▎', '●', '▼', etc.
+          spacing = 2,
+          severity_sort = true,
+          format = function(diagnostic)
+            -- Show the full message with source
+            local source = diagnostic.source and string.format(" [%s]", diagnostic.source) or ""
+            return string.format("%s%s", diagnostic.message, source)
+          end,
+        },
+        
+        -- Enhanced signs in the sign column
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "✘",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.INFO] = "⚑",
+            [vim.diagnostic.severity.HINT] = "⚡",
+          },
+        },
+        
+        -- Show diagnostics in floating window on cursor hold
+        float = {
+          enabled = true,
+          focusable = false,
+          style = "minimal",
+          border = "rounded",
+          source = "always", -- Always show the source
+          header = "",
+          prefix = "",
+          format = function(diagnostic)
+            local source = diagnostic.source and string.format("[%s] ", diagnostic.source) or ""
+            local code = diagnostic.code and string.format("(%s) ", diagnostic.code) or ""
+            return string.format("%s%s%s", source, code, diagnostic.message)
+          end,
+        },
+        
+        -- Sort diagnostics by severity
+        severity_sort = true,
+        
+        -- Update diagnostics in insert mode
+        update_in_insert = false,
+      })
+      
+      -- Auto-show floating diagnostic on cursor hold
+      vim.api.nvim_create_autocmd("CursorHold", {
+        buffer = 0,
+        callback = function()
+          local opts = {
+            focusable = false,
+            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+            border = 'rounded',
+            source = 'always',
+            prefix = ' ',
+            scope = 'cursor',
+          }
+          vim.diagnostic.open_float(nil, opts)
+        end
+      })
+      
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr, silent = true }
         
@@ -127,6 +192,7 @@ return {
           }):find()
         end
         
+        -- LSP navigation
         vim.keymap.set('n', 'gd', goto_definition, opts)
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
@@ -134,6 +200,17 @@ return {
         vim.keymap.set('n', 'gD', '<cmd>Telescope lsp_definitions<CR>', opts)
         vim.keymap.set('n', '<leader>fd', '<cmd>Telescope lsp_definitions<CR>', opts)
         vim.keymap.set('n', '<leader>fr', '<cmd>Telescope lsp_references<CR>', opts)
+        
+        -- Enhanced diagnostic keybindings
+        vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { buffer = bufnr, desc = "Show line diagnostics" })
+        vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { buffer = bufnr, desc = "Go to previous diagnostic" })
+        vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { buffer = bufnr, desc = "Go to next diagnostic" })
+        vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { buffer = bufnr, desc = "Add diagnostics to location list" })
+        
+        -- Additional helpful LSP keybindings
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code actions" })
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol" })
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr, desc = "Signature help" })
       end
  
       lspconfig.clangd.setup({
