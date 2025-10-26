@@ -60,10 +60,22 @@ return {
         update_in_insert = false,
       })
       
-      -- Auto-show floating diagnostic on cursor hold
+      -- Auto-show floating diagnostic on cursor hold (with buffer checks)
       vim.api.nvim_create_autocmd("CursorHold", {
-        buffer = 0,
         callback = function()
+          -- Only show diagnostics for normal, modifiable buffers
+          local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
+          local modifiable = vim.api.nvim_buf_get_option(0, 'modifiable')
+          local filetype = vim.api.nvim_buf_get_option(0, 'filetype')
+          
+          -- Skip special buffers, non-modifiable buffers, and certain filetypes
+          if buftype ~= '' or not modifiable or 
+             filetype == 'TelescopePrompt' or 
+             filetype == 'terminal' or
+             filetype == 'toggleterm' then
+            return
+          end
+          
           local opts = {
             focusable = false,
             close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },

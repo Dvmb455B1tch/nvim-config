@@ -33,6 +33,24 @@ vim.cmd [[
 
 -- Terminal settings
 vim.o.shell = "fish"  -- Set fish as default shell
+
+-- Window and buffer management improvements
+vim.o.splitright = true   -- Split new windows to the right
+vim.o.splitbelow = true   -- Split new windows below
+vim.o.hidden = true       -- Allow hidden buffers
+
+-- Prevent issues with non-modifiable buffers
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    -- Ensure we can navigate properly between windows
+    local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
+    if buftype == 'terminal' then
+      -- Set terminal-specific options
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+    end
+  end
+})
 vim.g.terminal_color_0 = "#45475a"
 vim.g.terminal_color_1 = "#f38ba8"
 vim.g.terminal_color_2 = "#a6e3a1"
@@ -42,17 +60,5 @@ vim.g.terminal_color_5 = "#f5c2e7"
 vim.g.terminal_color_6 = "#94e2d5"
 vim.g.terminal_color_7 = "#bac2de"
 
--- Terminal keybindings
-function _G.set_terminal_keymaps()
-  local opts = {buffer = 0}
-  vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
-  vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
-  vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-  vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-  vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-  vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
-  vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
-end
-
--- Apply terminal keymaps when entering terminal
-vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+-- Terminal keybindings are now handled by the toggleterm plugin
+-- Remove duplicate terminal keybinding setup to avoid conflicts
