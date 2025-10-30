@@ -59,6 +59,6 @@ vim.g.terminal_color_4 = "#89b4fa"
 vim.g.terminal_color_5 = "#f5c2e7"
 vim.g.terminal_color_6 = "#94e2d5"
 vim.g.terminal_color_7 = "#bac2de"
-
+vim.opt.relativenumber = true
 -- Terminal keybindings are now handled by the toggleterm plugin
 -- Remove duplicate terminal keybinding setup to avoid conflicts
