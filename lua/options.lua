@@ -4,7 +4,8 @@ vim.cmd("set autoindent")
 vim.cmd("set hlsearch")
 vim.cmd("set mouse=a")
 vim.cmd("set updatetime=250")
-vim.cmd("set signcolumn=yes")
+vim.cmd("set signcolumn=no")
+vim.cmd("set fillchars+=eob:\\ ")  -- Note the escaped space
 vim.cmd [[
   hi Normal guibg=NONE ctermbg=NONE
   hi NormalNC guibg=NONE ctermbg=NONE
