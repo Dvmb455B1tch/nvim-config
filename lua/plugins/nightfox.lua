@@ -32,7 +32,7 @@ return {
             })
             
             -- Choose variant: "nightfox", "dayfox", "dawnfox", "duskfox", "nordfox", "terafox", "carbonfox" (nightfox, duskfox, terafox, carbonfox)
-            vim.cmd.colorscheme "carbonfox"
+            vim.cmd.colorscheme "duskfox"
         end
     }
 }
